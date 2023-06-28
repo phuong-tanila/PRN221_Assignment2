@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\buildMultiTargeting\PhuongNH_SE150997_BikeShop.props" />
+</Project>

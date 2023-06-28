@@ -1,0 +1,293 @@
+﻿@page
+@model PhuongNH_SE150997_BikeShop.Pages.ShopManagementModel
+@{
+}
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <!-- font awesome -->
+    <script defer src="https://kit.fontawesome.com/330a21053c.js" crossorigin="anonymous"></script>
+    <!-- google font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+          rel="stylesheet">
+    <!-- data table -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+    <!-- CSS -->
+    <link rel="stylesheet" href="/css/dashboardMain.css">
+</head>
+
+<body>
+    <!--  -->
+    <!-- left side -->
+    <div class="left_side">
+        <div class="nav_bar">
+
+            <div class="logo">
+                <img src="/images/bicycle.png" alt="">
+            </div>
+            <div class="nav_container">
+                <!-- item navigation-->
+                <div class="nav_item active">
+                    <a href="#">
+                        <i class="fa-solid fa-house" style="color: #d1d3d7;"></i>
+                    </a>
+                </div>
+
+                <!-- item navigation -->
+                <div class="nav_item">
+                    <a href="#">
+                        <i class="fa-solid fa-list-check" style="color: #d1d3d7;"></i>
+                    </a>
+
+                </div>
+            </div>
+            <div>
+                <div class="nav_item">
+                    <a href="/Logout">
+                        <i class="fa-solid fa-arrow-right-from-bracket" style="color: #d1d3d7;"></i>
+                    </a>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <!-- right side -->
+    <div class="right_side">
+        <div class="content">
+            <div class="left_content">
+                <h2>Overview</h2>
+                <div class="overview_container">
+                    <div class="overview_item">
+                        <div class="overview_item_header">
+                            <span>Customer</span>
+                            <i class="fa-solid fa-users overview_icon"></i>
+                        </div>
+                        <div class="overview_item_body">
+                            <div class="item_data">@Model.CountCustomer</div>
+                        </div>
+                    </div>
+                    <div class="overview_item">
+                        <div class="overview_item_header">
+                            <span>Sold</span>
+                            <i class="fa-solid fa-money-bill overview_icon"></i>
+                        </div>
+                        <div class="overview_item_body">
+                            <div class="item_data">@Model.CountOrderItem</div>
+                        </div>
+                    </div>
+                    <div class="overview_item">
+                        <div class="overview_item_header">
+                            <span>Products</span>
+                            <i class="fa-brands fa-product-hunt overview_icon"></i>
+                        </div>
+                        <div class=" overview_item_body">
+                            <div class="item_data">@Model.CountProduct</div>
+                        </div>
+                    </div>
+                </div>
+                <!-- chart -->
+                <div class="chart_container">
+                    <div class="line_chart_box">
+                        <i class="fa-solid fa-chart-line chart_icon"></i>
+                        <h3 style="margin-bottom: 20px;">Recent marketing</h3>
+                        <canvas id="line_chart"></canvas>
+                    </div>
+                    <div class="chart_box">
+                        <div class="bar_chart_box">
+                            <i class="fa-solid fa-chart-line chart_icon"></i>
+                            <h3 style="margin-bottom: 20px;">Top 5 best selling bikes</h3>
+                            <canvas id="bar_chart"></canvas>
+                        </div>
+                        <div class="bar_chart_box">
+                            <i class="fa-solid fa-chart-line chart_icon"></i>
+                            <h3 style="margin-bottom: 20px;">
+                                Top 3 most attractive brands
+                            </h3>
+                            <canvas id="bar_brands_chart"></canvas>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="wrapper">
+                    <a href="/CreateProduct"><button id="create_btn">Create</button></a>
+                    <table id="table_bikes">
+
+
+                        <!-- table head -->
+                        <thead>
+                            <tr>
+                                <th>@Html.DisplayNameFor(model => model.Product[0].ProductName)</th>
+                                <th>@Html.DisplayNameFor(model => model.Product[0].Brand)</th>
+                                <th>@Html.DisplayNameFor(model => model.Product[0].Category)</th>
+                                <th>@Html.DisplayNameFor(model => model.Product[0].ModelYear)</th>
+                                <th>@Html.DisplayNameFor(model => model.Product[0].ListPrice)</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <!-- table body -->
+                        <tbody>
+                            @foreach (var item in Model.Product)
+                            {
+                                <!-- row -->
+                                <tr>
+                                    <td>@Html.DisplayFor(modelItem => item.ProductName)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Brand.BrandName)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Category.CategoryName)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.ModelYear)</td>
+                                    <td>$@Html.DisplayFor(modelItem => item.ListPrice)</td>
+                                    <td class="btn_box">
+                                        <a href="/UpdateProduct"><button id="update_btn">Update</button></a>
+                                        <a href="/DeleteProduct"><button id="delete_btn">Delete</button></a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- right content -->
+            <div class="right_content">
+                @{
+                    var fName = HttpContextAccessor.HttpContext.Session.GetString("firstname");
+                    var lName = HttpContextAccessor.HttpContext.Session.GetString("lastname");
+                }
+                <i class="fa-solid fa-user-shield" style="color: #1C4E80;"> @fName @lName</i>
+                <div class="popular_product_container">
+                    <!-- list popular products -->
+                    <div class="popular_products">
+                        <span style="margin: 10px;
+                                    font-size: 25px;
+                                    font-weight: 500;
+                                    text-align: left;
+                                    padding: 0 10px;
+                                    color: #1C4E80;">
+                            Popular Bikes
+                        </span>
+                        <!-- item -->
+                        <div class="item">
+                            <img class="item_image" src="/images/unnamed.png" alt="">
+                            <div class="item_detail">
+                                <div class="item_name">Xe đạp bằng chân</div>
+                                <div class="item_price">100.000</div>
+                            </div>
+                        </div>
+
+                        <!-- item -->
+                        <div class="item">
+                            <img class="item_image" src="/images/unnamed.png" alt="">
+                            <div class="item_detail">
+                                <div class="item_name">Xe đạp bằng chân</div>
+                                <div class="item_price">100.000</div>
+                            </div>
+                        </div>
+                        <!-- item -->
+                        <div class="item">
+                            <img class="item_image" src="/images/unnamed.png" alt="">
+                            <div class="item_detail">
+                                <div class="item_name">Xe đạp bằng chân</div>
+                                <div class="item_price">100.000</div>
+                            </div>
+                        </div>
+                        <!-- item -->
+                        <div class="item">
+                            <img class="item_image" src="/images/unnamed.png" alt="">
+                            <div class="item_detail">
+                                <div class="item_name">Xe đạp bằng chân</div>
+                                <div class="item_price">100.000</div>
+                            </div>
+                        </div>
+                        <!-- item -->
+                        <div class="item">
+                            <img class="item_image" src="/images/unnamed.png" alt="">
+                            <div class="item_detail">
+                                <div class="item_name">Xe đạp bằng chân</div>
+                                <div class="item_price">100.000</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Popular customer -->
+                <div class="popular_product_container">
+                    <!-- list popular products -->
+                    <div class="popular_products">
+                        <span style="margin: 10px;
+                                    font-size: 25px;
+                                    font-weight: 500;
+                                    text-align: left;
+                                    padding: 0 10px;
+                                    color: #1C4E80;">
+                            Staffs
+                        </span>
+                        @foreach (var i in Model.Staff)
+                        {
+                            <!-- item -->
+                            <div class="item">
+                                <img class="item_image" src="/images/us.png" alt="">
+                                <div class="item_detail">
+                                    <div class="item_name">@Html.DisplayFor(modelItem => i.FirstName) @Html.DisplayFor(modelItem => i.LastName)</div>
+                                    <div class="item_price">@Html.DisplayFor(modelItem => i.Phone)</div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <!-- recently release -->
+                <div class="popular_product_container">
+                    <!-- list release products -->
+                    <div class="popular_products">
+                        <span style="margin: 10px;
+                                    font-size: 25px;
+                                    font-weight: 500;
+                                    text-align: left;
+                                    padding: 0 10px;
+                                    color: #1C4E80;
+                        ">
+                            Recently Release
+                        </span>
+                        <!-- item -->
+                        <div class="item">
+                            <img class="item_image" src="/images/unnamed.png" alt="">
+                            <div class="item_detail">
+                                <div class="item_name">Xe đạp bằng đầu</div>
+                                <div class="item_price">100.000$</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<!-- jquery -->
+<script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM="
+        crossorigin="anonymous"></script>
+<!-- data table -->
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<!-- chart js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- line chart -->
+<script src="/js/dashboardMainLineChart.js"></script>
+<!-- bar chart -->
+<script src="/js/dashboardMainBarChart.js"></script>
+<script src="/js/dashboardBrandBarChart.js"></script>
+<!-- data table js -->
+<script src="/js/dashboardMainDataTable.js"></script>
+<!-- js event -->
+<script src="/js/dashboardMainHandleEvent.js"></script>
+
+</html>
