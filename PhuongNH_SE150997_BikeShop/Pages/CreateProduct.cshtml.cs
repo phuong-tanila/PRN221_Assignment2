@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+#nullable disable
 using PhuongNH_SE150997_BikeShop.Models;
 using PhuongNH_SE150997_BikeShop.Services.BrandService;
 using PhuongNH_SE150997_BikeShop.Services.CategoryService;
@@ -31,14 +32,13 @@ namespace PhuongNH_SE150997_BikeShop.Pages
 
         public IActionResult OnPost()
         {
-            if (!ModelState.IsValid)
+            if (!ModelState.IsValid || ProductModel == null)
             {
+                ViewData["BrandId"] = new SelectList(_brandService.GetAll(), "BrandId", "BrandName");
+                ViewData["CategoryId"] = new SelectList(_categoryService.GetAll(), "CategoryId", "CategoryName");
                 return Page();
             }
-            if (ProductModel == null)
-            {
-                return RedirectToPage("/ShopManagement");
-            }
+         
 
             _productService.CreateNewProduct(ProductModel);
             return RedirectToPage("/ShopManagement");

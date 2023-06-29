@@ -15,8 +15,9 @@ namespace PhuongNH_SE150997_BikeShop.Repositories.ProductRepository
         }
         public Product Create(Product product)
         {
+            _context.Products.Add(product);
             _context.SaveChanges();
-            return _context.Products.Add(product).Entity;
+            return product;
         }
 
         public void Delete(int id)

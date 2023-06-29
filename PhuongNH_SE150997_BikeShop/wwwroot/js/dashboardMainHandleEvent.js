@@ -92,9 +92,7 @@ const check_valid_all = (ele) => {
         createMsg(ele.parentNode, 'Please input full details', 'warning_submit')
         return
     }
-    year_input.value = ""
-    name_input.value = ""
-    price_input.value = ""
+    
     // close_popup()
 }
 

@@ -1,6 +1,7 @@
 ﻿@page
 @model PhuongNH_SE150997_BikeShop.Pages.CreateProductModel
 @{
+    ViewData["Title"] = "Create";
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -61,26 +62,30 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <!-- <div class="input_box"> -->
             <div class="input_group">
-                <label asp-for="ProductModel.ProductName" for="">Name</label>
-                <input asp-for="ProductModel.ProductName" id="name_input" type="text">
+                <label asp-for="ProductModel.ProductName">Name</label>
+                <input asp-for="ProductModel.ProductName" id="name_input">
+                <span asp-validation-for="ProductModel.ProductName" class="text-danger"></span>
             </div>
             <div class="input_group">
-                <label asp-for="ProductModel.BrandId" for="">Brand</label>
-                <select asp-for="ProductModel.BrandId" asp-items="ViewBag.BrandId" name="list_brand" id="brand"></select>
+                <label asp-for="ProductModel.BrandId">Brand</label>
+                <select asp-for="ProductModel.BrandId" asp-items="ViewBag.BrandId" ></select>
             </div>
             <div class="input_group">
-                <label asp-for="ProductModel.CategoryId" for="">Category</label>
-                <select asp-for="ProductModel.CategoryId" asp-items="ViewBag.CategoryId" name="list_category" id="category"></select>
+                <label asp-for="ProductModel.CategoryId">Category</label>
+                <select asp-for="ProductModel.CategoryId" asp-items="ViewBag.CategoryId" ></select>
             </div>
             <div class="input_group">
                 <label asp-for="ProductModel.ModelYear" for="">Model Year</label>
                 <input asp-for="ProductModel.ModelYear" id="year_input" type="text">
+               
             </div>
             <div class="input_group">
                 <label asp-for="ProductModel.ListPrice" for="price_input">Price</label>
                 <input asp-for="ProductModel.ListPrice" id="price_input" type="text">
+               
+
             </div>
-            <div style="display: flex;justify-content: center;flex-direction: column;align-items: center;">
+            <div class="input_group" style="display: flex;justify-content: center;flex-direction: column;align-items: center;">
                 <button type="submit" id="update" value="Create">Create</button>
             </div>
         </form>

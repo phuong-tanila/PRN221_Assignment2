@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+#nullable disable
 
 namespace PhuongNH_SE150997_BikeShop.Models
 {
